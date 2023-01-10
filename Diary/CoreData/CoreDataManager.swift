@@ -43,7 +43,7 @@ class CoreDataManager {
             managedObject.setValue(diary.body, forKey: "body")
             managedObject.setValue(diary.createdAt, forKey: "createdAt")
             managedObject.setValue(diary.uuid, forKey: "uuid")
-            managedObject.setValue(diary.weather?.main, forKey: "weatherMain")
+            managedObject.setValue(diary.weather?.description, forKey: "weatherDescription")
             managedObject.setValue(diary.weather?.icon, forKey: "weatherIcon")
         }
     }
