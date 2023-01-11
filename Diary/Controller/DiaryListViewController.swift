@@ -6,7 +6,7 @@
 
 import UIKit
 import CoreLocation
-
+// 이번에 역할 쪼개기 연습을 했다.
 final class DiaryListViewController: UIViewController {
     typealias DiaryDataSource = UITableViewDiffableDataSource<Int, Diary>
     typealias DiarySnapShot = NSDiffableDataSourceSnapshot<Int, Diary>
@@ -16,7 +16,7 @@ final class DiaryListViewController: UIViewController {
     private lazy var presentNewDiaryViewAction = UIAction { _ in
         let newDiary = Diary(title: "", body: "", createdAt: Date())
         let diaryViewController = DiaryViewController(diary: newDiary,
-                                                      isAuthorizationAllow: self.locationManager.isAuthorizationAllow)
+                                                      isAuthorizationAllow: self.locationManager.isAuthorized)
 
         self.navigationController?.pushViewController(diaryViewController, animated: true)
     }
@@ -40,6 +40,8 @@ final class DiaryListViewController: UIViewController {
     private var dataSource: DiaryDataSource?
     private var diaryList: [Diary] = []
     private let locationManager = CLLocationManager()
+
+    // init에서 networkManager 주입
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -146,7 +148,7 @@ extension DiaryListViewController: UITableViewDelegate {
         }
 
         navigationController?.pushViewController(diaryViewController, animated: true)
-        diaryListTableView.deselectRow(at: indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
     func tableView(_ tableView: UITableView,

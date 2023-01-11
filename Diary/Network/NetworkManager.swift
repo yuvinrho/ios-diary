@@ -29,10 +29,11 @@ enum NetworkError: LocalizedError {
         }
     }
 }
-
+// Networkable을 채택하면 뭐하나~ 다른 게 없는데~
 final class NetworkManager: Networkable {
+    // 싱글톤 패턴은 안티 패턴이라고 부르는 사람도 있다.
     static let shared = NetworkManager()
-
+    // 싱글톤을 편의만을 위해서 사용하는 것은 좋지 않다.
     private init() {}
 
     func fetchData(url: URL?, completion: @escaping (Result<Data, NetworkError>) -> Void) {

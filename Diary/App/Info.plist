@@ -5,7 +5,7 @@
 	<key>Open Weather API KEY</key>
 	<string>84d30f785f39452890ee701e07565e79</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>사용자의 현재 위치에 따른 날씨 정보를 기록합니다</string>
+	<string>현재 위치의 날씨 정보를 제공하기 위해...</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

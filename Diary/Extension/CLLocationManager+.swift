@@ -15,8 +15,8 @@ extension CLLocationManager {
 
         return coordinate
     }
-
-    var isAuthorizationAllow: Bool {
+    // 
+    var isAuthorized: Bool {
         switch authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
             return true

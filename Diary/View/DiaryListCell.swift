@@ -18,15 +18,15 @@ final class DiaryListCell: UITableViewCell {
     let creationDateLabel: UILabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .callout)
-        label.setContentHuggingPriority(.init(1000), for: .horizontal)
-        label.setContentHuggingPriority(.init(1000), for: .vertical)
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentHuggingPriority(.required, for: .vertical)
 
         return label
     }()
 
     let weatherIconImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.setContentHuggingPriority(.init(1000), for: .horizontal)
+        imageView.setContentHuggingPriority(.required, for: .horizontal)
 
         return imageView
     }()

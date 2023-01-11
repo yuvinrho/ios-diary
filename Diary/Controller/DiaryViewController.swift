@@ -7,7 +7,7 @@
 
 import UIKit
 import CoreLocation
-
+// 변경의 이유는 단 하나여야한다. 여러개면 잘못된 것 -> 즉 응집도가 낮은 것.
 final class DiaryViewController: UIViewController {
     private var diary: Diary
     private let networkManager: Networkable = NetworkManager.shared
@@ -72,7 +72,7 @@ final class DiaryViewController: UIViewController {
 
         return stackView
     }()
-
+    // Bool은 확장성이 좋지 않다. 겉에 완충재 하나 달기? -> 변경으로부터 보호
     init(diary: Diary, isAuthorizationAllow: Bool = false) {
         self.diary = diary
         super.init(nibName: nil, bundle: nil)
@@ -81,6 +81,8 @@ final class DiaryViewController: UIViewController {
                                                selector: #selector(updateCoreDataIfNeeded),
                                                name: UIScene.willDeactivateNotification,
                                                object: nil)
+        // iPhone 13 mini 시뮬레이터로는 잡을 수 없다. 시행착오의 문서화가 필요하다면 노션 등...
+        // 불필요한 주석은 달지않아야 하지만 주석을 꼭 배제해야하는 것은 아니다.
         guard let coordinate = locationManager.coordinate else {
             return
         }
@@ -123,32 +125,39 @@ final class DiaryViewController: UIViewController {
             bodyTextView.becomeFirstResponder()
         }
     }
-
+    // 딱 봐도 긴 메서드(가령 100줄)는 중간에 주석을 다는 것 보다 메서드를 분리해서 기능을 네이밍으로 설명하는 편이 좋다.
+    // private func는 주석과 같은 효과가 있다.
     private func fetchWeather(isAuthorizationAllowed: Bool) {
-        if isAuthorizationAllowed {
-            guard let weatherAPI = weatherAPI else {
-                return
-            }
-            let url = weatherAPI.url
+        // guard -> 조기탈출, 권한이 없으면 떠난다가 의미상으로도 낫고 들여쓰기도 덜하니 가독성 Up
+        guard isAuthorizationAllowed else {
+            return
+        }
+        guard let weatherAPI = weatherAPI else {
+            return
+        }
+        let url = weatherAPI.url
 
-            networkManager.fetchData(url: url) { result in
-                switch result {
-                case .success(let data):
-                    guard let weatherResponseDTO = try? JSONDecoder().decode(WeatherResponseDTO.self, from: data) else {
-                        return
-                    }
-                    let weather = weatherResponseDTO.toDomain()
-                    self.diary.weather = weather
-                    self.configureWeatherIconImage(weather.icon) { image in
-                        DispatchQueue.main.async {
-                            self.weatherIconImageView.image = image
-                        }
-                    }
-                case .failure(let error):
-                    print(error.errorDescription)
+        networkManager.fetchData(url: url) { result in
+            switch result {
+            case .success(let data):
+                // decode는 UI단의 업무가 아니다. 쪼개면 변경에 더 유연하다? 하지만 유연성은 필요할 때 주자
+                guard let weatherResponseDTO = try? JSONDecoder().decode(WeatherResponseDTO.self, from: data) else {
+                    return
                 }
+                let weather = weatherResponseDTO.toDomain()
+                // 잘 쪼개면서도 찾기 쉬운, 폴더 단위...같이 일하는 놈들(협력관계), 모듈화, 내 도메인만 빌드하자
+                // Feature grouping
+                self.diary.weather = weather
+                self.configureWeatherIconImage(weather.icon) { image in
+                    DispatchQueue.main.async {
+                        self.weatherIconImageView.image = image
+                    }
+                }
+            case .failure(let error):
+                print(error.errorDescription)
             }
         }
+
     }
 
     private func configureWeatherIconImage(_ icon: String, _ completion: @escaping (UIImage) -> Void) {
